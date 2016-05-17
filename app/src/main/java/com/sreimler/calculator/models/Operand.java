@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package com.sreimler.calculator.data;
+package com.sreimler.calculator.models;
 
 /**
- * Represents the operators available in the calculations.
+ * Represents a single calculation operand.
  */
-public enum Operator {
-    EMPTY(""),
-    PLUS("+"),
-    MINUS("-"),
-    MULTIPLY("*"),
-    DIVIDE("/");
+public class Operand {
 
-    private String operator;
+    private int mValue;
 
-    Operator(String operator) {
-        this.operator = operator;
+    public int getValue() {
+        return mValue;
     }
 
-
-    @Override
-    public String toString() {
-        return operator;
+    public void setValue(int value) {
+        this.mValue = value;
     }
 }

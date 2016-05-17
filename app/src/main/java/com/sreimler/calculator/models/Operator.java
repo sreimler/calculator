@@ -14,11 +14,27 @@
  * limitations under the License.
  */
 
-package com.sreimler.calculator.data;
+package com.sreimler.calculator.models;
 
 /**
- * Performs the actual calculations.
+ * Represents the operators available in the calculations.
  */
-public class Calculator {
+public enum Operator {
+    EMPTY(""),
+    PLUS("+"),
+    MINUS("-"),
+    MULTIPLY("*"),
+    DIVIDE("/");
 
+    private String operator;
+
+    Operator(String operator) {
+        this.operator = operator;
+    }
+
+
+    @Override
+    public String toString() {
+        return operator;
+    }
 }

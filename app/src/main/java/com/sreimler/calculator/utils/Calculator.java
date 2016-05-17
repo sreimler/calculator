@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package com.sreimler.calculator.data;
+package com.sreimler.calculator.utils;
+
+import com.sreimler.calculator.models.Operator;
 
 /**
- * Represents a single calculation operand.
+ * Performs the actual calculations.
  */
-public class Operand {
+public class Calculator {
 
-    private int mValue;
-
-    public int getValue() {
-        return mValue;
-    }
-
-    public void setValue(int value) {
-        this.mValue = value;
+    public String performCalculation(String firstOperand, String secondOperand, Operator operator) {
+        return null;
     }
 }
