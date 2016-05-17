@@ -16,8 +16,9 @@
 
 package com.sreimler.calculator.calculator;
 
-import com.sreimler.calculator.utils.Calculator;
+import com.sreimler.calculator.models.Operand;
 import com.sreimler.calculator.models.Operator;
+import com.sreimler.calculator.utils.Calculator;
 
 /**
  * Listens to user input from the {@link CalculatorActivity}, forwards calculations to
@@ -25,11 +26,11 @@ import com.sreimler.calculator.models.Operator;
  */
 public class CalculatorPresenter implements CalculatorContract.Presenter {
 
-    private final Calculator mCalculator;
-    private final CalculatorContract.View mView;
+    private Calculator mCalculator;
+    private CalculatorContract.View mView;
 
-    private String mCurrentOperand;
-    private String mPreviousOperand;
+    private Operand mCurrentOperand;
+    private Operand mPreviousOperand;
     private Operator mOperator;
     private boolean wasLastInputOperator = false;
 
@@ -37,6 +38,8 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         mCalculator = calculator;
         mView = view;
 
+        mCurrentOperand = new Operand();
+        mPreviousOperand = new Operand();
         resetCalculator();
     }
 
@@ -47,19 +50,19 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     }
 
     private void resetCalculator() {
-        mCurrentOperand = "0";
-        mPreviousOperand = "0";
+        mCurrentOperand.reset();
+        mPreviousOperand.reset();
         mOperator = Operator.EMPTY;
     }
 
     @Override
     public String getPreviousOperand() {
-        return mPreviousOperand;
+        return mPreviousOperand.getValue();
     }
 
     @Override
     public String getCurrentOperand() {
-        return mCurrentOperand;
+        return mCurrentOperand.getValue();
     }
 
     @Override
@@ -71,15 +74,11 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void appendValue(String value) {
         if (wasLastInputOperator) {
             // Last input was an operator - start a new operand
-            mPreviousOperand = mCurrentOperand;
-            mCurrentOperand = "";
+            mPreviousOperand.setValue(mCurrentOperand.getValue());
+            mCurrentOperand.reset();
         }
 
-        if (mCurrentOperand.equals("0")) {
-            mCurrentOperand = value;
-        } else {
-            mCurrentOperand += value;
-        }
+        mCurrentOperand.appendValue(value);
 
         wasLastInputOperator = false;
     }
@@ -88,19 +87,16 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void setOperator(Operator operator) {
         if (mOperator != Operator.EMPTY && !wasLastInputOperator) {
             // Previous operator exists - perform partical calculation
-            mCurrentOperand = mCalculator.performCalculation(mPreviousOperand, mCurrentOperand, mOperator);
+            mCurrentOperand.setValue(
+                    mCalculator.performCalculation(mPreviousOperand, mCurrentOperand, mOperator));
 
             // Reset the previous operand and store the new operator
-            mPreviousOperand = "";
-            mOperator = operator;
-            wasLastInputOperator = true;
-            updateDisplay();
-        } else{
-            mOperator = operator;
-            wasLastInputOperator = true;
-            updateDisplay();
+            mPreviousOperand.reset();
         }
 
+        mOperator = operator;
+        wasLastInputOperator = true;
+        updateDisplay();
     }
 
     @Override
@@ -109,7 +105,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     }
 
     private void updateDisplay() {
-        mView.displayOperand(mCurrentOperand);
+        mView.displayOperand(mCurrentOperand.getValue());
         mView.displayOperator(mOperator.toString());
     }
 }

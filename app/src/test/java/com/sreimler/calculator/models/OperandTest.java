@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for the {@link Operand}.
@@ -55,6 +55,15 @@ public class OperandTest {
         mOperand.reset();
 
         assertThat("After reset, value was zero", mOperand.getValue(), is(equalTo(Operand.EMPTY_VALUE)));
+    }
+
+    @Test
+    public void setValue_shouldSetValue() {
+        String value = "4823";
+        appendValues(VALUE);
+        mOperand.setValue(value);
+
+        assertThat("Value was overwritten by setValue()", mOperand.getValue(), is(equalTo(value)));
     }
 
     private void appendValues(String value) {

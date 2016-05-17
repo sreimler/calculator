@@ -1,22 +1,24 @@
 package com.sreimler.calculator.calculator;
 
-import com.sreimler.calculator.utils.Calculator;
+import com.sreimler.calculator.models.Operand;
 import com.sreimler.calculator.models.Operator;
+import com.sreimler.calculator.utils.Calculator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.calls;
-import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,13 +33,19 @@ public class CalculatorPresenterTest {
     private Calculator mCalculator;
 
     @Mock
-    CalculatorContract.View mView;
+    private CalculatorContract.View mView;
 
-    private CalculatorContract.Presenter mPresenter;
+    @Mock
+    private Operand mPreviousOperand;
+
+    @Mock
+    private Operand mCurrentOperand;
+
+    @InjectMocks
+    private CalculatorPresenter mPresenter;
 
     private static final String SHORT_INPUT_A = "8";
     private static final String SHORT_INPUT_B = "5";
-    private static final String ZERO_INPUT = "0";
     private static final String LONG_INPUT = "38493";
     private static final Operator[] OPERATORS = {Operator.PLUS, Operator.MULTIPLY, Operator.DIVIDE, Operator.MINUS};
 
@@ -46,16 +54,12 @@ public class CalculatorPresenterTest {
         // Inject the Mockito mocks
         MockitoAnnotations.initMocks(this);
 
-        // Create a CalculatorPresenter object
-        mPresenter = new CalculatorPresenter(mCalculator, mView);
+        when(mPreviousOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+        when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
     }
 
     @Test
-    public void afterInitialization_calculatorValuesShouldBeEmpty() {
-        assertThat("First operand is empty after initialization",
-                mPresenter.getPreviousOperand(), is(equalTo(ZERO_INPUT)));
-        assertThat("Second operand is empty after initialization",
-                mPresenter.getCurrentOperand(), is(equalTo(ZERO_INPUT)));
+    public void afterInitialization_operatorShouldBeEmpty() {
         assertThat("Operator is empty after initialization",
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
     }
@@ -70,12 +74,12 @@ public class CalculatorPresenterTest {
         mPresenter.deleteCalculation();
 
         // Operand and operator display should be reset
-        verify(mView, times(1)).displayOperand(ZERO_INPUT);
-        verify(mView, times(1)).displayOperator(Operator.EMPTY.toString());
+        verify(mView, atLeastOnce()).displayOperand(Operand.EMPTY_VALUE);
+        verify(mView, atLeastOnce()).displayOperator(Operator.EMPTY.toString());
 
         // All operands and operators should be removed from the calculation
-        assertThat("First operand was reset", mPresenter.getPreviousOperand(), is(equalTo(ZERO_INPUT)));
-        assertThat("Second operand was reset", mPresenter.getCurrentOperand(), is(equalTo(ZERO_INPUT)));
+        verify(mPreviousOperand).reset();
+        verify(mCurrentOperand, times(2)).reset();
         assertThat("Operator was reset", mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
     }
 
@@ -85,8 +89,7 @@ public class CalculatorPresenterTest {
             mPresenter.appendValue(LONG_INPUT.substring(i, i + 1));
         }
 
-        assertThat("Entered value is stored as operand",
-                mPresenter.getCurrentOperand(), is(equalTo(LONG_INPUT)));
+        verify(mCurrentOperand, times(LONG_INPUT.length())).appendValue(anyString());
     }
 
     @Test
@@ -103,29 +106,28 @@ public class CalculatorPresenterTest {
     @Test
     public void numericalInputAfterOperator_shouldBeStoredAsNewOperand() {
         mPresenter.appendValue(SHORT_INPUT_A);
+        when(mCurrentOperand.getValue()).thenReturn(SHORT_INPUT_A);
         mPresenter.setOperator(Operator.PLUS);
         mPresenter.appendValue(SHORT_INPUT_B);
 
-        assertThat("First number has been stored as first operand",
-                mPresenter.getPreviousOperand(), is(equalTo(SHORT_INPUT_A)));
-        assertThat("Second number has been stored as second operand",
-                mPresenter.getCurrentOperand(), is(equalTo(SHORT_INPUT_B)));
+        verify(mPreviousOperand).setValue(SHORT_INPUT_A);
+        verify(mCurrentOperand).appendValue(SHORT_INPUT_B);
     }
 
     @Test
     public void secondDistinctOperator_shouldExecutePartialCalculation() {
         String result = calculateResult(SHORT_INPUT_A, SHORT_INPUT_B, Operator.PLUS);
-        when(mCalculator.performCalculation(SHORT_INPUT_A, SHORT_INPUT_B, Operator.PLUS))
+        when(mCalculator.performCalculation(any(Operand.class), any(Operand.class), any(Operator.class)))
                 .thenReturn(result);
 
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.setOperator(Operator.PLUS);
         mPresenter.appendValue(SHORT_INPUT_B);
+        when(mCurrentOperand.getValue()).thenReturn(result);
         mPresenter.setOperator(Operator.DIVIDE);
 
-        assertThat("Partial calculation has been executed",
-                mPresenter.getCurrentOperand(), is(equalTo(result)));
-        verify(mView).displayOperand(result);
+        verify(mCalculator).performCalculation(any(Operand.class), any(Operand.class), any(Operator.class));
+        verify(mView, atLeastOnce()).displayOperand(result);
     }
 
     private String calculateResult(String firstOperand, String secondOperand, Operator operator) {
@@ -159,11 +161,14 @@ public class CalculatorPresenterTest {
 
     @Test
     public void userEventCalculate_shouldExecuteCalculation() {
+
+
         mPresenter.appendValue(SHORT_INPUT_B);
         mPresenter.setOperator(Operator.MULTIPLY);
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.performCalculation();
 
-        verify(mCalculator).performCalculation(SHORT_INPUT_B, SHORT_INPUT_A, Operator.MULTIPLY);
+        verify(mCalculator).performCalculation(
+                Mockito.any(Operand.class), Mockito.any(Operand.class), Mockito.any(Operator.class));
     }
 }

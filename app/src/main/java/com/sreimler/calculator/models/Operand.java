@@ -29,6 +29,10 @@ public class Operand {
         return mValue;
     }
 
+    public void setValue(String value) {
+        mValue = value;
+    }
+
     public void appendValue(String value) {
         if (mValue.equals("0")) {
             mValue = value;

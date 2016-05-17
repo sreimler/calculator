@@ -16,6 +16,7 @@
 
 package com.sreimler.calculator.utils;
 
+import com.sreimler.calculator.models.Operand;
 import com.sreimler.calculator.models.Operator;
 
 /**
@@ -23,7 +24,7 @@ import com.sreimler.calculator.models.Operator;
  */
 public class Calculator {
 
-    public String performCalculation(String firstOperand, String secondOperand, Operator operator) {
+    public String performCalculation(Operand firstOperand, Operand secondOperand, Operator operator) {
         return null;
     }
 }
