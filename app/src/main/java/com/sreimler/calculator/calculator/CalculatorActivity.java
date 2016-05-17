@@ -33,7 +33,12 @@ public class CalculatorActivity extends AppCompatActivity implements CalculatorC
     }
 
     @Override
-    public void setCalculationText(String calculation) {
+    public void displayOperand(String calculation) {
+        // TODO: set ui text
+    }
+
+    @Override
+    public void displayOperator(String operator) {
         // TODO: set ui text
     }
 }

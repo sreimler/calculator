@@ -20,14 +20,21 @@ package com.sreimler.calculator.data;
  * Represents the operators available in the calculations.
  */
 public enum Operator {
-    PLUS('+'),
-    MINUS('-'),
-    MULTIPLY('*'),
-    DIVIDE('/');
+    EMPTY(""),
+    PLUS("+"),
+    MINUS("-"),
+    MULTIPLY("*"),
+    DIVIDE("/");
 
-    private char operator;
+    private String operator;
 
-    Operator(char operator) {
+    Operator(String operator) {
         this.operator = operator;
+    }
+
+
+    @Override
+    public String toString() {
+        return operator;
     }
 }

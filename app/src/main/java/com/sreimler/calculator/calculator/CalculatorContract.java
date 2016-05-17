@@ -16,6 +16,8 @@
 
 package com.sreimler.calculator.calculator;
 
+import com.sreimler.calculator.data.Operator;
+
 /**
  * Specification of the contract between calculator view and presenter.
  */
@@ -23,11 +25,23 @@ public class CalculatorContract {
 
     interface View {
 
-        void setCalculationText(String calculation);
+        void displayOperand(String calculation);
+
+        void displayOperator(String operator);
     }
 
     interface Presenter {
 
         void deleteCalculation();
+
+        String getSecondOperand();
+
+        String getFirstOperand();
+
+        Operator getOperator();
+
+        void appendValue(String value);
+
+        void setOperator(Operator operator);
     }
 }

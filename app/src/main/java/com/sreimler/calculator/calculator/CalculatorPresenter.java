@@ -17,6 +17,7 @@
 package com.sreimler.calculator.calculator;
 
 import com.sreimler.calculator.data.Calculator;
+import com.sreimler.calculator.data.Operator;
 
 /**
  * Listens to user input from the {@link CalculatorActivity}, forwards calculations to
@@ -27,6 +28,10 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     private final Calculator mCalculator;
     private final CalculatorContract.View mView;
 
+    private String mFirstOperand = "";
+    private String mSecondOperand = "";
+    private Operator mOperator = null;
+
     public CalculatorPresenter(Calculator calculator, CalculatorContract.View view) {
         mCalculator = calculator;
         mView = view;
@@ -34,7 +39,41 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void deleteCalculation() {
-        // Reset the UI calculation text
-        mView.setCalculationText("");
+        mFirstOperand = "";
+        mSecondOperand = "";
+        mOperator = Operator.EMPTY;
+
+        updateDisplay();
+    }
+
+    @Override
+    public String getSecondOperand() {
+        return mSecondOperand;
+    }
+
+    @Override
+    public String getFirstOperand() {
+        return mFirstOperand;
+    }
+
+    @Override
+    public Operator getOperator() {
+        return mOperator;
+    }
+
+    @Override
+    public void appendValue(String value) {
+        mFirstOperand += value;
+    }
+
+    @Override
+    public void setOperator(Operator operator) {
+        mOperator = operator;
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
+        mView.displayOperand(mFirstOperand);
+        mView.displayOperator(mOperator.toString());
     }
 }
