@@ -26,7 +26,7 @@ public class CalculatorContract {
         void setCalculationText(String calculation);
     }
 
-    interface UserActionsListener {
+    interface Presenter {
 
         void deleteCalculation();
     }

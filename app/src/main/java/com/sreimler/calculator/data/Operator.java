@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package com.sreimler.calculator;
-
-import android.app.Application;
-import android.test.ApplicationTestCase;
+package com.sreimler.calculator.data;
 
 /**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ * Represents the operators available in the calculations.
  */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+public enum Operator {
+    PLUS('+'),
+    MINUS('-'),
+    MULTIPLY('*'),
+    DIVIDE('/');
+
+    private char operator;
+
+    Operator(char operator) {
+        this.operator = operator;
     }
 }

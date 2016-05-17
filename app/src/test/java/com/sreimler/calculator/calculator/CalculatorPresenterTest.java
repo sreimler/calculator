@@ -4,21 +4,25 @@ import com.sreimler.calculator.data.Calculator;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Unit tests for the implementation of {@link CalculatorPresenter}.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class CalculatorPresenterTest {
 
     @Mock
     private Calculator mCalculator;
 
-    @Mock CalculatorContract.View mCalculatorView;
+    @Mock
+    CalculatorContract.View mCalculatorView;
 
-    private CalculatorPresenter mCalculatorPresenter;
+    private CalculatorContract.Presenter mCalculatorPresenter;
 
     @Before
     public void setupCalculatorPresenter() {

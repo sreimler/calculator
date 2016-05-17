@@ -22,19 +22,19 @@ import com.sreimler.calculator.data.Calculator;
  * Listens to user input from the {@link CalculatorActivity}, forwards calculations to
  * the {@link com.sreimler.calculator.data.Calculator} and updates the UI if required.
  */
-public class CalculatorPresenter implements CalculatorContract.UserActionsListener {
+public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     private final Calculator mCalculator;
-    private final CalculatorContract.View mCalculatorView;
+    private final CalculatorContract.View mView;
 
-    public CalculatorPresenter(Calculator calculator, CalculatorContract.View calculatorView) {
+    public CalculatorPresenter(Calculator calculator, CalculatorContract.View view) {
         mCalculator = calculator;
-        mCalculatorView = calculatorView;
+        mView = view;
     }
 
     @Override
     public void deleteCalculation() {
         // Reset the UI calculation text
-        mCalculatorView.setCalculationText("");
+        mView.setCalculationText("");
     }
 }
