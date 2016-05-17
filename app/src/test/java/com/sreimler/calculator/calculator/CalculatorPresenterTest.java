@@ -117,8 +117,7 @@ public class CalculatorPresenterTest {
     @Test
     public void secondDistinctOperator_shouldExecutePartialCalculation() {
         String result = calculateResult(SHORT_INPUT_A, SHORT_INPUT_B, Operator.PLUS);
-        when(mCalculator.performCalculation(any(Operand.class), any(Operand.class), any(Operator.class)))
-                .thenReturn(result);
+        when(mCalculator.add(any(Operand.class), any(Operand.class))).thenReturn(result);
 
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.setOperator(Operator.PLUS);
@@ -126,7 +125,7 @@ public class CalculatorPresenterTest {
         when(mCurrentOperand.getValue()).thenReturn(result);
         mPresenter.setOperator(Operator.DIVIDE);
 
-        verify(mCalculator).performCalculation(any(Operand.class), any(Operand.class), any(Operator.class));
+        verify(mCalculator).add(any(Operand.class), any(Operand.class));
         verify(mView, atLeastOnce()).displayOperand(result);
     }
 
@@ -156,19 +155,16 @@ public class CalculatorPresenterTest {
         mPresenter.appendValue(SHORT_INPUT_A);
 
         assertThat("Previous operand is zero",
-                mPresenter.getPreviousOperand(), is(equalTo(Integer.toString(0))));
+                mPresenter.getPreviousOperand(), is(equalTo(Operand.EMPTY_VALUE)));
     }
 
     @Test
     public void userEventCalculate_shouldExecuteCalculation() {
-
-
         mPresenter.appendValue(SHORT_INPUT_B);
         mPresenter.setOperator(Operator.MULTIPLY);
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.performCalculation();
 
-        verify(mCalculator).performCalculation(
-                Mockito.any(Operand.class), Mockito.any(Operand.class), Mockito.any(Operator.class));
+        verify(mCalculator).multiply(Mockito.any(Operand.class), Mockito.any(Operand.class));
     }
 }

@@ -59,7 +59,7 @@ public class CalculatorTest {
     @Test
     public void testAddition() {
         String expectedResult = Integer.toString(VALUE_A + VALUE_B);
-        String result = mCalculator.performCalculation(mFirstOperand, mSecondOperand, Operator.PLUS);
+        String result = mCalculator.add(mFirstOperand, mSecondOperand);
 
         assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
     }
@@ -67,7 +67,7 @@ public class CalculatorTest {
     @Test
     public void testSubtraction() {
         String expectedResult = Integer.toString(VALUE_A - VALUE_B);
-        String result = mCalculator.performCalculation(mFirstOperand, mSecondOperand, Operator.MINUS);
+        String result = mCalculator.subtract(mFirstOperand, mSecondOperand);
 
         assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
     }
@@ -75,7 +75,7 @@ public class CalculatorTest {
     @Test
     public void testMultiplication() {
         String expectedResult = Integer.toString(VALUE_A * VALUE_B);
-        String result = mCalculator.performCalculation(mFirstOperand, mSecondOperand, Operator.MULTIPLY);
+        String result = mCalculator.multiply(mFirstOperand, mSecondOperand);
 
         assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
     }
@@ -83,7 +83,7 @@ public class CalculatorTest {
     @Test
     public void testDivision() {
         String expectedResult = Integer.toString(VALUE_A / VALUE_B);
-        String result = mCalculator.performCalculation(mFirstOperand, mSecondOperand, Operator.DIVIDE);
+        String result = mCalculator.divide(mFirstOperand, mSecondOperand);
 
         assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
     }

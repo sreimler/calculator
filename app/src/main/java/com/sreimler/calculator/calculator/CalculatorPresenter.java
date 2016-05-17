@@ -87,8 +87,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void setOperator(Operator operator) {
         if (mOperator != Operator.EMPTY && !wasLastInputOperator) {
             // Previous operator exists - perform partical calculation
-            mCurrentOperand.setValue(
-                    mCalculator.performCalculation(mPreviousOperand, mCurrentOperand, mOperator));
+            performCalculation();
 
             // Reset the previous operand and store the new operator
             mPreviousOperand.reset();
@@ -101,7 +100,24 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void performCalculation() {
-        mCalculator.performCalculation(mPreviousOperand, mCurrentOperand, mOperator);
+        String result = "";
+
+        switch (mOperator) {
+            case PLUS:
+                result = mCalculator.add(mPreviousOperand, mCurrentOperand);
+                break;
+            case MINUS:
+                result = mCalculator.subtract(mPreviousOperand, mCurrentOperand);
+                break;
+            case MULTIPLY:
+                result = mCalculator.multiply(mPreviousOperand, mCurrentOperand);
+                break;
+            case DIVIDE:
+                result = mCalculator.divide(mPreviousOperand, mCurrentOperand);
+                break;
+        }
+
+        mCurrentOperand.setValue(result);
     }
 
     private void updateDisplay() {

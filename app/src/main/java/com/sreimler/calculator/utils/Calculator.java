@@ -24,27 +24,27 @@ import com.sreimler.calculator.models.Operator;
  */
 public class Calculator {
 
-    public String performCalculation(Operand firstOperand, Operand secondOperand, Operator operator) {
-        int a = Integer.valueOf(firstOperand.getValue());
-        int b = Integer.valueOf(secondOperand.getValue());
-
-        int result = 0;
-
-        switch (operator) {
-            case PLUS:
-                result = a+b;
-                break;
-            case MINUS:
-                result = a-b;
-                break;
-            case MULTIPLY:
-                result = a*b;
-                break;
-            case DIVIDE:
-                result = a/b;
-                break;
-        }
-
+    public String add(Operand firstOperand, Operand secondOperand) {
+        int result = getIntValue(firstOperand) + getIntValue(secondOperand);
         return Integer.toString(result);
+    }
+
+    public String subtract(Operand firstOperand, Operand secondOperand) {
+        int result = getIntValue(firstOperand) - getIntValue(secondOperand);
+        return Integer.toString(result);
+    }
+
+    public String multiply(Operand firstOperand, Operand secondOperand) {
+        int result = getIntValue(firstOperand) * getIntValue(secondOperand);
+        return Integer.toString(result);
+    }
+
+    public String divide(Operand firstOperand, Operand secondOperand) {
+        int result = getIntValue(firstOperand) / getIntValue(secondOperand);
+        return Integer.toString(result);
+    }
+
+    private int getIntValue(Operand operand) {
+        return Integer.valueOf(operand.getValue());
     }
 }
