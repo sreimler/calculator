@@ -25,6 +25,26 @@ import com.sreimler.calculator.models.Operator;
 public class Calculator {
 
     public String performCalculation(Operand firstOperand, Operand secondOperand, Operator operator) {
-        return null;
+        int a = Integer.valueOf(firstOperand.getValue());
+        int b = Integer.valueOf(secondOperand.getValue());
+
+        int result = 0;
+
+        switch (operator) {
+            case PLUS:
+                result = a+b;
+                break;
+            case MINUS:
+                result = a-b;
+                break;
+            case MULTIPLY:
+                result = a*b;
+                break;
+            case DIVIDE:
+                result = a/b;
+                break;
+        }
+
+        return Integer.toString(result);
     }
 }

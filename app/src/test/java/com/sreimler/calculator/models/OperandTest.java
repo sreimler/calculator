@@ -33,7 +33,7 @@ public class OperandTest {
     private static final String VALUE = "537";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mOperand = new Operand();
     }
 
