@@ -21,13 +21,23 @@ package com.sreimler.calculator.models;
  */
 public class Operand {
 
-    private int mValue;
+    public static final String EMPTY_VALUE = "0";
 
-    public int getValue() {
+    private String mValue = EMPTY_VALUE;
+
+    public String getValue() {
         return mValue;
     }
 
-    public void setValue(int value) {
-        this.mValue = value;
+    public void appendValue(String value) {
+        if (mValue.equals("0")) {
+            mValue = value;
+        } else {
+            mValue += value;
+        }
+    }
+
+    public void reset() {
+        mValue = EMPTY_VALUE;
     }
 }
