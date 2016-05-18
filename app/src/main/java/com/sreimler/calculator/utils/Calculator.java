@@ -17,7 +17,6 @@
 package com.sreimler.calculator.utils;
 
 import com.sreimler.calculator.models.Operand;
-import com.sreimler.calculator.models.Operator;
 
 /**
  * Performs the actual calculations.

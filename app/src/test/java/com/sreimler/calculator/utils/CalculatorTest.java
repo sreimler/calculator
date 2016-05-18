@@ -21,8 +21,10 @@ import com.sreimler.calculator.models.Operator;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for the {@link Calculator}.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class CalculatorTest {
 
     private Calculator mCalculator;
@@ -59,32 +62,32 @@ public class CalculatorTest {
     @Test
     public void testAddition() {
         String expectedResult = Integer.toString(VALUE_A + VALUE_B);
-        String result = mCalculator.add(mFirstOperand, mSecondOperand);
 
-        assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
+        assertThat("Addition was executed correctly",
+                mCalculator.add(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 
     @Test
     public void testSubtraction() {
         String expectedResult = Integer.toString(VALUE_A - VALUE_B);
-        String result = mCalculator.subtract(mFirstOperand, mSecondOperand);
 
-        assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
+        assertThat("Addition was executed correctly",
+                mCalculator.subtract(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 
     @Test
     public void testMultiplication() {
         String expectedResult = Integer.toString(VALUE_A * VALUE_B);
-        String result = mCalculator.multiply(mFirstOperand, mSecondOperand);
 
-        assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
+        assertThat("Addition was executed correctly",
+                mCalculator.multiply(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 
     @Test
     public void testDivision() {
         String expectedResult = Integer.toString(VALUE_A / VALUE_B);
-        String result = mCalculator.divide(mFirstOperand, mSecondOperand);
 
-        assertThat("Addition was executed correctly", result, is(equalTo(expectedResult)));
+        assertThat("Addition was executed correctly",
+                mCalculator.divide(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 }
