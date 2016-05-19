@@ -79,8 +79,8 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         }
 
         mCurrentOperand.appendValue(value);
-
         wasLastInputOperator = false;
+        updateDisplay();
     }
 
     @Override

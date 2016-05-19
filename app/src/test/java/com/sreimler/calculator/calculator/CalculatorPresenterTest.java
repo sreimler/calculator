@@ -90,6 +90,7 @@ public class CalculatorPresenterTest {
         }
 
         verify(mCurrentOperand, times(LONG_INPUT.length())).appendValue(anyString());
+        verify(mView, times(LONG_INPUT.length())).displayOperand(anyString());
     }
 
     @Test

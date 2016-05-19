@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -44,26 +45,26 @@ public class CalculatorActivityTest {
     @Test
     public void calculatorButtons_shouldBeVisible() {
         // Numbers
-        onView(withText("0")).check(matches(isDisplayed()));
-        onView(withText("1")).check(matches(isDisplayed()));
-        onView(withText("2")).check(matches(isDisplayed()));
-        onView(withText("3")).check(matches(isDisplayed()));
-        onView(withText("4")).check(matches(isDisplayed()));
-        onView(withText("5")).check(matches(isDisplayed()));
-        onView(withText("6")).check(matches(isDisplayed()));
-        onView(withText("7")).check(matches(isDisplayed()));
-        onView(withText("8")).check(matches(isDisplayed()));
-        onView(withText("9")).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_0)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_1)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_2)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_3)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_4)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_5)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_6)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_7)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_8)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_9)).check(matches(isDisplayed()));
 
         // Operators
-        onView(withText("+")).check(matches(isDisplayed()));
-        onView(withText("-")).check(matches(isDisplayed()));
-        onView(withText("*")).check(matches(isDisplayed()));
-        onView(withText("/")).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_plus)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_minus)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_multiply)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_divide)).check(matches(isDisplayed()));
 
         // Actions
-        onView(withText("=")).check(matches(isDisplayed()));
-        onView(withText("C")).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_clear)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_equals)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -71,4 +72,16 @@ public class CalculatorActivityTest {
         onView(withId(R.id.txtv_display_operator)).check(matches(isDisplayed()));
         onView(withId(R.id.txtv_display_calculation)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void clicksOnNumberButtons_shouldUpdateTheCalculatorDisplay() {
+        String input = "537";
+
+        for (int i = 0; i < input.length(); i++) {
+            onView(withText(input.substring(i, i + 1))).perform(click());
+        }
+
+        onView(withId(R.id.txtv_display_calculation)).check(matches(withText(input)));
+    }
+
 }
