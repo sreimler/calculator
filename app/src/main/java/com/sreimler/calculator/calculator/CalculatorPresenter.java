@@ -32,8 +32,9 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     private Operand mCurrentOperand;
     private Operand mPreviousOperand;
     private Operator mOperator;
-    private boolean wasLastInputOperator = false;
-    private boolean wasLastInputEquals = false;
+    private boolean hasLastInputOperator = false;
+    private boolean hasLastInputEquals = false;
+    private boolean isInErrorState = false;
 
     public CalculatorPresenter(Calculator calculator, CalculatorContract.View view) {
         mCalculator = calculator;
@@ -48,6 +49,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void clearCalculation() {
         resetCalculator();
         updateDisplay();
+        isInErrorState = false;
     }
 
     @Override
@@ -67,34 +69,40 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void appendValue(String value) {
-        if (wasLastInputOperator) {
+        if (hasLastInputOperator) {
             // Last input was an operator - start a new operand
             mPreviousOperand.setValue(mCurrentOperand.getValue());
             mCurrentOperand.reset();
-        } else if (wasLastInputEquals) {
+        } else if (hasLastInputEquals) {
             // Last input was calculate - start a new calculation
             resetCalculator();
         }
 
         mCurrentOperand.appendValue(value);
-        wasLastInputOperator = false;
-        wasLastInputEquals = false;
+        hasLastInputOperator = false;
+        hasLastInputEquals = false;
+        isInErrorState = false;
         updateDisplay();
     }
 
     @Override
     public void appendOperator(String operator) {
-        if (mOperator != Operator.EMPTY && !wasLastInputOperator) {
-            // Previous operator exists - perform partical calculation
-            performCalculation();
+        // Dont append new operators when in error state
+        if (!isInErrorState) {
+            if (mOperator != Operator.EMPTY && !hasLastInputOperator) {
+                // Previous operator exists - perform partical calculation
+                performCalculation();
 
-            // Reset the previous operand and store the new operator
-            mPreviousOperand.reset();
+                // When the partial calculation has led to an error state, stop here
+                if (isInErrorState) {
+                    return;
+                }
+            }
+
+            mOperator = Operator.getOperator(operator);
+            hasLastInputOperator = true;
+            updateDisplay();
         }
-
-        mOperator = Operator.getOperator(operator);
-        wasLastInputOperator = true;
-        updateDisplay();
     }
 
     @Override
@@ -110,21 +118,32 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
                 mCurrentOperand.setValue(mCalculator.multiply(mPreviousOperand, mCurrentOperand));
                 break;
             case DIVIDE:
-                mCurrentOperand.setValue(mCalculator.divide(mPreviousOperand, mCurrentOperand));
+                if (mCurrentOperand.getValue().equals(Operand.EMPTY_VALUE)) {
+                    // Fordbidden division by zero - ERROR
+                    switchToErrorState();
+                } else {
+                    mCurrentOperand.setValue(mCalculator.divide(mPreviousOperand, mCurrentOperand));
+                }
                 break;
         }
 
+        // Reset the previous operand and operator
         mPreviousOperand.reset();
         mOperator = Operator.EMPTY;
-        wasLastInputEquals = true;
+        hasLastInputEquals = true;
         updateDisplay();
+    }
+
+    private void switchToErrorState() {
+        mCurrentOperand.setValue(Operand.ERROR_VALUE);
+        isInErrorState = true;
     }
 
     private void resetCalculator() {
         mCurrentOperand.reset();
         mPreviousOperand.reset();
-        wasLastInputEquals = false;
-        wasLastInputOperator = false;
+        hasLastInputEquals = false;
+        hasLastInputOperator = false;
         mOperator = Operator.EMPTY;
     }
 

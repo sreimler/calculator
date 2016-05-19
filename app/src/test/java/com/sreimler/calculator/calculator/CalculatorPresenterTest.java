@@ -173,6 +173,67 @@ public class CalculatorPresenterTest {
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
     }
 
+    @Test
+    public void divisionByZero_shouldActivateErrorState() {
+        performZeroDivision();
+
+        verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
+    }
+
+    @Test
+    public void inErrorState_newOperatorsShouldBeForbidden() {
+        performZeroDivision();
+
+        mPresenter.appendOperator(Operator.PLUS.toString());
+        assertThat("New operator was not permitted",
+                mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    @Test
+    public void inErrorState_clearShouldStartNewCalculation() {
+        performZeroDivision();
+
+        mPresenter.clearCalculation();
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.appendOperator(Operator.PLUS.toString());
+
+        assertThat("Clearing in error state started new calculation",
+                mPresenter.getOperator(), is(equalTo(Operator.PLUS)));
+    }
+
+    @Test
+    public void inErrorState_numbersShouldStartNewCalculation() {
+        performZeroDivision();
+
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.appendOperator(Operator.PLUS.toString());
+
+        assertThat("Number entered in error state started new calculation",
+                mPresenter.getOperator(), is(equalTo(Operator.PLUS)));
+    }
+
+    @Test
+    public void calculationErrorsByOperatorEntered_shouldNotDisplayOperator() {
+        prepareZeroDivision();
+        mPresenter.appendOperator(Operator.PLUS.toString());
+
+        verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
+        assertThat("Operator has been reset",
+                mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    private void prepareZeroDivision() {
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.appendOperator(Operator.DIVIDE.toString());
+        mPresenter.appendValue(Operand.EMPTY_VALUE);
+        when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+    }
+
+    private void performZeroDivision() {
+        prepareZeroDivision();
+        mPresenter.performCalculation();
+    }
+
     private String calculateResult(String firstOperand, String secondOperand, Operator operator) {
         switch (operator) {
             case PLUS:
