@@ -32,9 +32,23 @@ public enum Operator {
         this.operator = operator;
     }
 
-
     @Override
     public String toString() {
         return operator;
+    }
+
+    public static Operator getOperator(String operator) {
+        switch (operator) {
+            case "+":
+                return PLUS;
+            case "-":
+                return MINUS;
+            case "*":
+                return MULTIPLY;
+            case "/":
+                return DIVIDE;
+            default:
+                return EMPTY;
+        }
     }
 }

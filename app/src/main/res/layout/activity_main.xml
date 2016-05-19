@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            tools:text="357835"
+            android:text="@string/calculator_display_initial_value"
             android:id="@+id/txtv_display_calculation"
             android:gravity="end" />
     </LinearLayout>

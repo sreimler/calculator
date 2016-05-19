@@ -36,4 +36,5 @@
 
     <string name="button_clear">C</string>
     <string name="button_equals">=</string>
+    <string name="calculator_display_initial_value">0</string>
 </resources>

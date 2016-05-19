@@ -67,11 +67,11 @@ public class CalculatorPresenterTest {
     @Test
     public void userEventDelete_shouldResetCalculator() {
         mPresenter.appendValue(SHORT_INPUT_B);
-        mPresenter.setOperator(Operator.PLUS);
+        mPresenter.setOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
 
         // When the delete ("C") button is clicked
-        mPresenter.deleteCalculation();
+        mPresenter.clearCalculation();
 
         // Operand and operator display should be reset
         verify(mView, atLeastOnce()).displayOperand(Operand.EMPTY_VALUE);
@@ -96,7 +96,7 @@ public class CalculatorPresenterTest {
     @Test
     public void operatorsEntered_shouldBeStoredAndDisplayed() {
         for (Operator operator : OPERATORS) {
-            mPresenter.setOperator(operator);
+            mPresenter.setOperator(operator.toString());
         }
 
         assertThat("Operator has been stored and updated",
@@ -108,7 +108,7 @@ public class CalculatorPresenterTest {
     public void numericalInputAfterOperator_shouldBeStoredAsNewOperand() {
         mPresenter.appendValue(SHORT_INPUT_A);
         when(mCurrentOperand.getValue()).thenReturn(SHORT_INPUT_A);
-        mPresenter.setOperator(Operator.PLUS);
+        mPresenter.setOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
 
         verify(mPreviousOperand).setValue(SHORT_INPUT_A);
@@ -121,38 +121,18 @@ public class CalculatorPresenterTest {
         when(mCalculator.add(any(Operand.class), any(Operand.class))).thenReturn(result);
 
         mPresenter.appendValue(SHORT_INPUT_A);
-        mPresenter.setOperator(Operator.PLUS);
+        mPresenter.setOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
         when(mCurrentOperand.getValue()).thenReturn(result);
-        mPresenter.setOperator(Operator.DIVIDE);
+        mPresenter.setOperator(Operator.DIVIDE.toString());
 
         verify(mCalculator).add(any(Operand.class), any(Operand.class));
         verify(mView, atLeastOnce()).displayOperand(result);
     }
 
-    private String calculateResult(String firstOperand, String secondOperand, Operator operator) {
-        switch (operator) {
-            case PLUS:
-                return Integer.toString(Integer.valueOf(SHORT_INPUT_A)
-                        + Integer.valueOf(SHORT_INPUT_B));
-            case MINUS:
-                return Integer.toString(Integer.valueOf(SHORT_INPUT_A)
-                        - Integer.valueOf(SHORT_INPUT_B));
-            case MULTIPLY:
-                return Integer.toString(Integer.valueOf(SHORT_INPUT_A)
-                        * Integer.valueOf(SHORT_INPUT_B));
-            case DIVIDE:
-                return Integer.toString(Integer.valueOf(SHORT_INPUT_A)
-                        / Integer.valueOf(SHORT_INPUT_B));
-        }
-
-        return "";
-    }
-
-
     @Test
     public void operatorEnteredBeforeFirstOperand_shouldSetFirstOperandToZero() {
-        mPresenter.setOperator(Operator.PLUS);
+        mPresenter.setOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_A);
 
         assertThat("Previous operand is zero",
@@ -160,12 +140,43 @@ public class CalculatorPresenterTest {
     }
 
     @Test
-    public void userEventCalculate_shouldExecuteCalculation() {
+    public void userEventCalculate_shouldExecuteCalculationAndUpdateDisplay() {
         mPresenter.appendValue(SHORT_INPUT_B);
-        mPresenter.setOperator(Operator.MULTIPLY);
+        mPresenter.setOperator(Operator.MULTIPLY.toString());
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.performCalculation();
 
         verify(mCalculator).multiply(Mockito.any(Operand.class), Mockito.any(Operand.class));
+        // Views should have been updated 4 times in total
+        verify(mView, times(4)).displayOperand(anyString());
+        verify(mView, times(4)).displayOperator(anyString());
+    }
+
+    @Test
+    public void resultCalculation_shouldResetOperator() {
+        mPresenter.setOperator(Operator.MULTIPLY.toString());
+        mPresenter.performCalculation();
+
+        assertThat("Operator has been reset",
+                mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    private String calculateResult(String firstOperand, String secondOperand, Operator operator) {
+        switch (operator) {
+            case PLUS:
+                return Integer.toString(Integer.valueOf(firstOperand)
+                        + Integer.valueOf(secondOperand));
+            case MINUS:
+                return Integer.toString(Integer.valueOf(firstOperand)
+                        - Integer.valueOf(secondOperand));
+            case MULTIPLY:
+                return Integer.toString(Integer.valueOf(firstOperand)
+                        * Integer.valueOf(secondOperand));
+            case DIVIDE:
+                return Integer.toString(Integer.valueOf(firstOperand)
+                        / Integer.valueOf(secondOperand));
+        }
+
+        return "";
     }
 }

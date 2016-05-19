@@ -16,8 +16,10 @@
 
 package com.sreimler.calculator.calculator;
 
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.AppCompatButton;
 
 import com.sreimler.calculator.R;
 
@@ -29,14 +31,20 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Espresso UI tests for the {@link CalculatorActivity}.
  */
 @RunWith(AndroidJUnit4.class)
 public class CalculatorActivityTest {
+
+    private static char[] OPERATORS = {'+', '-', '*', '/'};
+    private static String RANDOM_INPUT = "533";
 
     @Rule
     public ActivityTestRule<CalculatorActivity> mActivityRule =
@@ -45,26 +53,18 @@ public class CalculatorActivityTest {
     @Test
     public void calculatorButtons_shouldBeVisible() {
         // Numbers
-        onView(withId(R.id.btn_0)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_1)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_2)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_3)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_4)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_5)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_6)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_7)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_8)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_9)).check(matches(isDisplayed()));
+        for (int i = 0; i <= 9; i++) {
+            checkButtonWithText(Integer.toString(i));
+        }
 
         // Operators
-        onView(withId(R.id.btn_plus)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_minus)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_multiply)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_divide)).check(matches(isDisplayed()));
+        for (char OPERATOR : OPERATORS) {
+            checkButtonWithText(String.valueOf(OPERATOR));
+        }
 
         // Actions
-        onView(withId(R.id.btn_clear)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_equals)).check(matches(isDisplayed()));
+        checkButtonWithText("C");
+        checkButtonWithText("=");
     }
 
     @Test
@@ -74,14 +74,61 @@ public class CalculatorActivityTest {
     }
 
     @Test
-    public void clicksOnNumberButtons_shouldUpdateTheCalculatorDisplay() {
-        String input = "537";
+    public void clicksOnNumberButtons_shouldUpdateCalculatorDisplay() {
+        clickSomeNumbers();
 
-        for (int i = 0; i < input.length(); i++) {
-            onView(withText(input.substring(i, i + 1))).perform(click());
-        }
-
-        onView(withId(R.id.txtv_display_calculation)).check(matches(withText(input)));
+        onView(withId(R.id.txtv_display_calculation)).check(matches(withText(RANDOM_INPUT)));
     }
 
+    @Test
+    public void clicksOnOperatorButtons_shouldUpdateOperatorDisplay() {
+        for (char OPERATOR : OPERATORS) {
+            String operator = String.valueOf(OPERATOR);
+            clickButtonWithText(operator);
+
+            onView(withId(R.id.txtv_display_operator)).check(matches(withText(operator)));
+        }
+    }
+
+    @Test
+    public void clickOnClearButton_shouldClearDisplays() {
+        clickSomeNumbers();
+        clickButtonWithText("+");
+
+        // Clear input
+        clickButtonWithText("C");
+
+        // Operator display should be empty, calculator display should be zero
+        onView(withId(R.id.txtv_display_operator)).check(matches(withText("")));
+        onView(withId(R.id.txtv_display_calculation)).check(matches(withText("0")));
+    }
+
+    @Test
+    public void clickOnEqualsButton_shouldPerformCalculation() {
+        clickSomeNumbers();
+        clickButtonWithText("+");
+        clickSomeNumbers();
+        clickButtonWithText("=");
+        String result = String.valueOf(Integer.valueOf(RANDOM_INPUT) + Integer.valueOf(RANDOM_INPUT));
+
+        onView(withId(R.id.txtv_display_calculation)).check(matches(withText(result)));
+    }
+
+    private void clickSomeNumbers() {
+        for (int i = 0; i < RANDOM_INPUT.length(); i++) {
+            clickButtonWithText(RANDOM_INPUT.substring(i, i + 1));
+        }
+    }
+
+    private void checkButtonWithText(String text) {
+        getViewWithText(text).check(matches(isDisplayed()));
+    }
+
+    private void clickButtonWithText(String text) {
+        getViewWithText(text).perform(click());
+    }
+
+    private ViewInteraction getViewWithText(String text) {
+        return onView(allOf(withText(text), withClassName(equalTo(AppCompatButton.class.getName()))));
+    }
 }

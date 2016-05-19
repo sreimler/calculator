@@ -67,8 +67,8 @@ public class OperandTest {
     }
 
     private void appendValues(String value) {
-        for(int i=0; i<value.length(); i++) {
-            mOperand.appendValue(value.substring(i, i+1));
+        for (int i = 0; i < value.length(); i++) {
+            mOperand.appendValue(value.substring(i, i + 1));
         }
     }
 }

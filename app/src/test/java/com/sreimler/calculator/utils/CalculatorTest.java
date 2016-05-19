@@ -17,7 +17,6 @@
 package com.sreimler.calculator.utils;
 
 import com.sreimler.calculator.models.Operand;
-import com.sreimler.calculator.models.Operator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**

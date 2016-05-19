@@ -32,7 +32,7 @@ public class CalculatorContract {
 
     interface Presenter {
 
-        void deleteCalculation();
+        void clearCalculation();
 
         String getPreviousOperand();
 
@@ -42,7 +42,7 @@ public class CalculatorContract {
 
         void appendValue(String value);
 
-        void setOperator(Operator operator);
+        void setOperator(String operator);
 
         void performCalculation();
     }

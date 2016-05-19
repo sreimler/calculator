@@ -44,7 +44,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     }
 
     @Override
-    public void deleteCalculation() {
+    public void clearCalculation() {
         resetCalculator();
         updateDisplay();
     }
@@ -84,7 +84,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     }
 
     @Override
-    public void setOperator(Operator operator) {
+    public void setOperator(String operator) {
         if (mOperator != Operator.EMPTY && !wasLastInputOperator) {
             // Previous operator exists - perform partical calculation
             performCalculation();
@@ -93,7 +93,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
             mPreviousOperand.reset();
         }
 
-        mOperator = operator;
+        mOperator = Operator.getOperator(operator);
         wasLastInputOperator = true;
         updateDisplay();
     }
@@ -118,6 +118,8 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         }
 
         mCurrentOperand.setValue(result);
+        mOperator = Operator.EMPTY;
+        updateDisplay();
     }
 
     private void updateDisplay() {
