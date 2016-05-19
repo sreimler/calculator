@@ -68,7 +68,7 @@ public class CalculatorActivity extends AppCompatActivity implements CalculatorC
 
     @OnClick({R.id.btn_plus, R.id.btn_minus, R.id.btn_multiply, R.id.btn_divide})
     public void operatorButtonClicked(Button button) {
-        mPresenter.setOperator((String) button.getText());
+        mPresenter.appendOperator((String) button.getText());
     }
 
     @OnClick(R.id.btn_clear)

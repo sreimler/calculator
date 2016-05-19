@@ -13,9 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
@@ -53,9 +53,6 @@ public class CalculatorPresenterTest {
     public void setupCalculatorPresenter() {
         // Inject the Mockito mocks
         MockitoAnnotations.initMocks(this);
-
-        when(mPreviousOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
-        when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
     }
 
     @Test
@@ -67,20 +64,20 @@ public class CalculatorPresenterTest {
     @Test
     public void userEventDelete_shouldResetCalculator() {
         mPresenter.appendValue(SHORT_INPUT_B);
-        mPresenter.setOperator(Operator.PLUS.toString());
+        mPresenter.appendOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
 
         // When the delete ("C") button is clicked
         mPresenter.clearCalculation();
 
-        // Operand and operator display should be reset
-        verify(mView, atLeastOnce()).displayOperand(Operand.EMPTY_VALUE);
-        verify(mView, atLeastOnce()).displayOperator(Operator.EMPTY.toString());
-
         // All operands and operators should be removed from the calculation
         verify(mPreviousOperand).reset();
         verify(mCurrentOperand, times(2)).reset();
         assertThat("Operator was reset", mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+
+        // Operand and operator display should be reset
+        verify(mView, times(4)).displayOperand(anyString());
+        verify(mView, times(4)).displayOperator(anyString());
     }
 
     @Test
@@ -96,7 +93,7 @@ public class CalculatorPresenterTest {
     @Test
     public void operatorsEntered_shouldBeStoredAndDisplayed() {
         for (Operator operator : OPERATORS) {
-            mPresenter.setOperator(operator.toString());
+            mPresenter.appendOperator(operator.toString());
         }
 
         assertThat("Operator has been stored and updated",
@@ -108,7 +105,7 @@ public class CalculatorPresenterTest {
     public void numericalInputAfterOperator_shouldBeStoredAsNewOperand() {
         mPresenter.appendValue(SHORT_INPUT_A);
         when(mCurrentOperand.getValue()).thenReturn(SHORT_INPUT_A);
-        mPresenter.setOperator(Operator.PLUS.toString());
+        mPresenter.appendOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
 
         verify(mPreviousOperand).setValue(SHORT_INPUT_A);
@@ -121,10 +118,10 @@ public class CalculatorPresenterTest {
         when(mCalculator.add(any(Operand.class), any(Operand.class))).thenReturn(result);
 
         mPresenter.appendValue(SHORT_INPUT_A);
-        mPresenter.setOperator(Operator.PLUS.toString());
+        mPresenter.appendOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_B);
         when(mCurrentOperand.getValue()).thenReturn(result);
-        mPresenter.setOperator(Operator.DIVIDE.toString());
+        mPresenter.appendOperator(Operator.DIVIDE.toString());
 
         verify(mCalculator).add(any(Operand.class), any(Operand.class));
         verify(mView, atLeastOnce()).displayOperand(result);
@@ -132,17 +129,17 @@ public class CalculatorPresenterTest {
 
     @Test
     public void operatorEnteredBeforeFirstOperand_shouldSetFirstOperandToZero() {
-        mPresenter.setOperator(Operator.PLUS.toString());
+        when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+        mPresenter.appendOperator(Operator.PLUS.toString());
         mPresenter.appendValue(SHORT_INPUT_A);
 
-        assertThat("Previous operand is zero",
-                mPresenter.getPreviousOperand(), is(equalTo(Operand.EMPTY_VALUE)));
+        verify(mPreviousOperand).setValue(Operand.EMPTY_VALUE);
     }
 
     @Test
     public void userEventCalculate_shouldExecuteCalculationAndUpdateDisplay() {
         mPresenter.appendValue(SHORT_INPUT_B);
-        mPresenter.setOperator(Operator.MULTIPLY.toString());
+        mPresenter.appendOperator(Operator.MULTIPLY.toString());
         mPresenter.appendValue(SHORT_INPUT_A);
         mPresenter.performCalculation();
 
@@ -154,10 +151,25 @@ public class CalculatorPresenterTest {
 
     @Test
     public void resultCalculation_shouldResetOperator() {
-        mPresenter.setOperator(Operator.MULTIPLY.toString());
+        mPresenter.appendOperator(Operator.MULTIPLY.toString());
         mPresenter.performCalculation();
 
         assertThat("Operator has been reset",
+                mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    @Test
+    public void numberAfterCalculation_shouldStartNewCalculation() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.appendOperator(Operator.PLUS.toString());
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.performCalculation();
+        mPresenter.appendValue(SHORT_INPUT_B);
+
+        verify(mCurrentOperand, times(2)).reset();
+        verify(mPreviousOperand, times(2)).reset();
+
+        assertThat("Previous operator has been reset",
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
     }
 

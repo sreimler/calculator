@@ -42,7 +42,7 @@ public class CalculatorContract {
 
         void appendValue(String value);
 
-        void setOperator(String operator);
+        void appendOperator(String operator);
 
         void performCalculation();
     }

@@ -33,6 +33,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     private Operand mPreviousOperand;
     private Operator mOperator;
     private boolean wasLastInputOperator = false;
+    private boolean wasLastInputEquals = false;
 
     public CalculatorPresenter(Calculator calculator, CalculatorContract.View view) {
         mCalculator = calculator;
@@ -47,12 +48,6 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void clearCalculation() {
         resetCalculator();
         updateDisplay();
-    }
-
-    private void resetCalculator() {
-        mCurrentOperand.reset();
-        mPreviousOperand.reset();
-        mOperator = Operator.EMPTY;
     }
 
     @Override
@@ -76,15 +71,19 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
             // Last input was an operator - start a new operand
             mPreviousOperand.setValue(mCurrentOperand.getValue());
             mCurrentOperand.reset();
+        } else if (wasLastInputEquals) {
+            // Last input was calculate - start a new calculation
+            resetCalculator();
         }
 
         mCurrentOperand.appendValue(value);
         wasLastInputOperator = false;
+        wasLastInputEquals = false;
         updateDisplay();
     }
 
     @Override
-    public void setOperator(String operator) {
+    public void appendOperator(String operator) {
         if (mOperator != Operator.EMPTY && !wasLastInputOperator) {
             // Previous operator exists - perform partical calculation
             performCalculation();
@@ -100,26 +99,33 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void performCalculation() {
-        String result = "";
-
         switch (mOperator) {
             case PLUS:
-                result = mCalculator.add(mPreviousOperand, mCurrentOperand);
+                mCurrentOperand.setValue(mCalculator.add(mPreviousOperand, mCurrentOperand));
                 break;
             case MINUS:
-                result = mCalculator.subtract(mPreviousOperand, mCurrentOperand);
+                mCurrentOperand.setValue(mCalculator.subtract(mPreviousOperand, mCurrentOperand));
                 break;
             case MULTIPLY:
-                result = mCalculator.multiply(mPreviousOperand, mCurrentOperand);
+                mCurrentOperand.setValue(mCalculator.multiply(mPreviousOperand, mCurrentOperand));
                 break;
             case DIVIDE:
-                result = mCalculator.divide(mPreviousOperand, mCurrentOperand);
+                mCurrentOperand.setValue(mCalculator.divide(mPreviousOperand, mCurrentOperand));
                 break;
         }
 
-        mCurrentOperand.setValue(result);
+        mPreviousOperand.reset();
         mOperator = Operator.EMPTY;
+        wasLastInputEquals = true;
         updateDisplay();
+    }
+
+    private void resetCalculator() {
+        mCurrentOperand.reset();
+        mPreviousOperand.reset();
+        wasLastInputEquals = false;
+        wasLastInputOperator = false;
+        mOperator = Operator.EMPTY;
     }
 
     private void updateDisplay() {

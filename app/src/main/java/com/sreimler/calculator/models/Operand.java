@@ -34,7 +34,7 @@ public class Operand {
     }
 
     public void appendValue(String value) {
-        if (mValue.equals("0")) {
+        if (mValue.equals(EMPTY_VALUE)) {
             mValue = value;
         } else {
             mValue += value;
