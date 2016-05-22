@@ -7,7 +7,6 @@ import com.sreimler.calculator.utils.Calculator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -41,7 +40,6 @@ public class CalculatorPresenterTest {
     @Mock
     private Operand mCurrentOperand;
 
-    @InjectMocks
     private CalculatorPresenter mPresenter;
 
     private static final String SHORT_INPUT_A = "8";
@@ -53,12 +51,22 @@ public class CalculatorPresenterTest {
     public void setupCalculatorPresenter() {
         // Inject the Mockito mocks
         MockitoAnnotations.initMocks(this);
+
+        when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+        when(mPreviousOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+
+        mPresenter = new CalculatorPresenter(mCalculator, mView, mCurrentOperand, mPreviousOperand);
     }
 
     @Test
     public void afterInitialization_operatorShouldBeEmpty() {
         assertThat("Operator is empty after initialization",
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    @Test
+    public void afterInitialization_presenterShouldSetDisplayToZero() {
+        verify(mView).displayOperand(Operand.EMPTY_VALUE);
     }
 
     @Test
@@ -71,13 +79,13 @@ public class CalculatorPresenterTest {
         mPresenter.clearCalculation();
 
         // All operands and operators should be removed from the calculation
-        verify(mPreviousOperand).reset();
-        verify(mCurrentOperand, times(2)).reset();
+        verify(mPreviousOperand, times(2)).reset();
+        verify(mCurrentOperand, times(3)).reset();
         assertThat("Operator was reset", mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
 
         // Operand and operator display should be reset
-        verify(mView, times(4)).displayOperand(anyString());
-        verify(mView, times(4)).displayOperator(anyString());
+        verify(mView, times(5)).displayOperand(anyString());
+        verify(mView, times(5)).displayOperator(anyString());
     }
 
     @Test
@@ -87,7 +95,7 @@ public class CalculatorPresenterTest {
         }
 
         verify(mCurrentOperand, times(LONG_INPUT.length())).appendValue(anyString());
-        verify(mView, times(LONG_INPUT.length())).displayOperand(anyString());
+        verify(mView, times(LONG_INPUT.length() + 1)).displayOperand(anyString());
     }
 
     @Test
@@ -98,7 +106,7 @@ public class CalculatorPresenterTest {
 
         assertThat("Operator has been stored and updated",
                 mPresenter.getOperator(), is(equalTo(OPERATORS[OPERATORS.length - 1])));
-        verify(mView, times(OPERATORS.length)).displayOperator(anyString());
+        verify(mView, times(OPERATORS.length + 1)).displayOperator(anyString());
     }
 
     @Test
@@ -144,9 +152,9 @@ public class CalculatorPresenterTest {
         mPresenter.performCalculation();
 
         verify(mCalculator).multiply(Mockito.any(Operand.class), Mockito.any(Operand.class));
-        // Views should have been updated 4 times in total
-        verify(mView, times(4)).displayOperand(anyString());
-        verify(mView, times(4)).displayOperator(anyString());
+        // Views should have been updated 5 times in total (1 initialization, 4 operations)
+        verify(mView, times(5)).displayOperand(anyString());
+        verify(mView, times(5)).displayOperator(anyString());
     }
 
     @Test
@@ -166,8 +174,8 @@ public class CalculatorPresenterTest {
         mPresenter.performCalculation();
         mPresenter.appendValue(SHORT_INPUT_B);
 
-        verify(mCurrentOperand, times(2)).reset();
-        verify(mPreviousOperand, times(2)).reset();
+        verify(mCurrentOperand, times(3)).reset();
+        verify(mPreviousOperand, times(3)).reset();
 
         assertThat("Previous operator has been reset",
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));

@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.sreimler.calculator.R;
+import com.sreimler.calculator.models.Operand;
 import com.sreimler.calculator.utils.Calculator;
 
 import butterknife.BindView;
@@ -48,7 +49,7 @@ public class CalculatorActivity extends AppCompatActivity implements CalculatorC
 
         ButterKnife.bind(this);
 
-        mPresenter = new CalculatorPresenter(new Calculator(), this);
+        mPresenter = new CalculatorPresenter(new Calculator(), this, new Operand(), new Operand());
     }
 
     @Override

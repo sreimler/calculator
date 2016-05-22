@@ -32,24 +32,27 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     private Operand mCurrentOperand;
     private Operand mPreviousOperand;
     private Operator mOperator;
-    private boolean hasLastInputOperator = false;
-    private boolean hasLastInputEquals = false;
-    private boolean isInErrorState = false;
+    private boolean hasLastInputOperator;
+    private boolean hasLastInputEquals;
+    private boolean isInErrorState;
 
-    public CalculatorPresenter(Calculator calculator, CalculatorContract.View view) {
+    public CalculatorPresenter(Calculator calculator,
+                               CalculatorContract.View view,
+                               Operand currentOperand,
+                               Operand previousOperand) {
         mCalculator = calculator;
         mView = view;
 
-        mCurrentOperand = new Operand();
-        mPreviousOperand = new Operand();
+        mCurrentOperand = currentOperand;
+        mPreviousOperand = previousOperand;
         resetCalculator();
+        updateDisplay();
     }
 
     @Override
     public void clearCalculation() {
         resetCalculator();
         updateDisplay();
-        isInErrorState = false;
     }
 
     @Override
@@ -144,6 +147,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         mPreviousOperand.reset();
         hasLastInputEquals = false;
         hasLastInputOperator = false;
+        isInErrorState = false;
         mOperator = Operator.EMPTY;
     }
 
