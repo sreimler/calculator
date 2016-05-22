@@ -30,28 +30,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp">
+        android:background="#fafafa"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp">
 
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             tools:text="+"
             android:id="@+id/txtv_display_operator"
-            android:textSize="80sp"
             android:gravity="bottom" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/calculator_display_initial_value"
             android:id="@+id/txtv_display_calculation"
             android:gravity="bottom|end"
-            android:textSize="80sp"
             android:maxLines="2" />
     </LinearLayout>
 
@@ -60,17 +56,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.125"
-        android:weightSum="1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp">
+        android:weightSum="1">
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="@string/button_7"
             android:id="@+id/btn_7"
-            android:layout_weight="0.25"/>
+            android:layout_weight="0.25" />
 
         <Button
             android:layout_width="0dp"
@@ -100,9 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.125"
-        android:weightSum="1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:weightSum="1">
 
         <Button
             android:layout_width="0dp"
@@ -138,9 +129,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.125"
-        android:weightSum="1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:weightSum="1">
 
         <Button
             android:layout_width="0dp"
@@ -176,10 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.125"
-        android:weightSum="1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp">
+        android:weightSum="1">
 
         <Button
             android:layout_width="0dp"

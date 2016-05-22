@@ -23,10 +23,17 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/AppTheme.Button</item>
+        <item name="android:textViewStyle">@style/AppTheme.TextView</item>
     </style>
 
-    <style name="AppTheme.Button" parent="Widget.AppCompat.Button">
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textSize">30sp</item>
+
+    </style>
+
+    <style name="AppTheme.TextView">
+        <item name="android:textSize">85sp</item>
+        <item name="android:textColor">#de000000</item>
     </style>
 
 </resources>
