@@ -36,6 +36,13 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     private boolean hasLastInputEquals;
     private boolean isInErrorState;
 
+    /**
+     * Creates a new {@link CalculatorPresenter}.
+     * @param calculator A {@link Calculator} object to be used for the calculations
+     * @param view An instance of a {@link com.sreimler.calculator.calculator.CalculatorContract.View} that the {@link CalculatorPresenter} updates
+     * @param currentOperand The first {@link Operand} object used for calculations
+     * @param previousOperand The second {@link Operand} object used for calculations
+     */
     public CalculatorPresenter(Calculator calculator,
                                CalculatorContract.View view,
                                Operand currentOperand,
@@ -49,17 +56,28 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         updateDisplay();
     }
 
+    /**
+     * Resets the calculator and updates the display correspondingly.
+     */
     @Override
     public void clearCalculation() {
         resetCalculator();
         updateDisplay();
     }
 
+    /**
+     * Retrieves the current operator of the equation.
+     * @return The current operator
+     */
     @Override
     public Operator getOperator() {
         return mOperator;
     }
 
+    /**
+     * Appends a (numerical) value to the equation.
+     * @param value The value to be appended
+     */
     @Override
     public void appendValue(String value) {
         if (hasLastInputOperator) {
@@ -81,6 +99,10 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         }
     }
 
+    /**
+     * Appends an operator to the equation.
+     * @param operator The operator to be appended
+     */
     @Override
     public void appendOperator(String operator) {
         // Dont append new operators when in error state
@@ -101,6 +123,9 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         }
     }
 
+    /**
+     * Executes a calculation with the current parameters in {@link CalculatorPresenter}.
+     */
     @Override
     public void performCalculation() {
         String result = "";

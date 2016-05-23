@@ -63,7 +63,7 @@ public class CalculatorActivityTest {
         }
 
         // Actions
-        checkButtonWithText("C");
+        checkButtonWithText("AC");
         checkButtonWithText("=");
     }
 
@@ -96,7 +96,7 @@ public class CalculatorActivityTest {
         clickButtonWithText("+");
 
         // Clear input
-        clickButtonWithText("C");
+        clickButtonWithText("AC");
 
         // Operator display should be empty, calculator display should be zero
         onView(withId(R.id.txtv_display_operator)).check(matches(withText("")));

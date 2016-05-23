@@ -28,14 +28,26 @@ public class Operand {
 
     private String mValue = EMPTY_VALUE;
 
+    /**
+     * Retrieves the value of an {@link Operand}.
+     * @return The operand value
+     */
     public String getValue() {
         return mValue;
     }
 
+    /**
+     * Sets the value of an {@link Operand}.
+     * @param value The operand value
+     */
     public void setValue(String value) {
         mValue = value;
     }
 
+    /**
+     * Appends a value to the existing {@link Operand} value.
+     * @param value The value to be appended
+     */
     public void appendValue(String value) {
         if (mValue.equals(EMPTY_VALUE)) {
             mValue = value;
@@ -44,6 +56,9 @@ public class Operand {
         }
     }
 
+    /**
+     * Resets the operand.
+     */
     public void reset() {
         mValue = EMPTY_VALUE;
     }
