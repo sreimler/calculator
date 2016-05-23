@@ -146,6 +146,8 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
                     result = mCalculator.divide(mPreviousOperand, mCurrentOperand);
                 }
                 break;
+            default:
+                result = mCurrentOperand.getValue();
         }
 
         if (result.equals("") || result.length() > Operand.MAX_LENGTH) {

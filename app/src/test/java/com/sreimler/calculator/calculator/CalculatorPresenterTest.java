@@ -311,6 +311,15 @@ public class CalculatorPresenterTest {
         verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
     }
 
+    @Test
+    public void calculationWithoutOperator_shouldReturnOperand() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        when(mCurrentOperand.getValue()).thenReturn(SHORT_INPUT_A);
+        mPresenter.performCalculation();
+
+        verify(mCurrentOperand).setValue(SHORT_INPUT_A);
+    }
+
     private void prepareZeroDivision() {
         mPresenter.appendValue(SHORT_INPUT_B);
         mPresenter.appendOperator(Operator.DIVIDE.toString());
