@@ -141,21 +141,18 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
                 result = mCalculator.multiply(mPreviousOperand, mCurrentOperand);
                 break;
             case DIVIDE:
-                if (mCurrentOperand.getValue().equals(Operand.EMPTY_VALUE)) {
-                    // Fordbidden division by zero - ERROR
-                    switchToErrorState();
-                } else {
+                // Check for division by zero
+                if (!mCurrentOperand.getValue().equals(Operand.EMPTY_VALUE)) {
                     result = mCalculator.divide(mPreviousOperand, mCurrentOperand);
                 }
                 break;
         }
 
-        if (result.length() > Operand.MAX_LENGTH) {
+        if (result.equals("") || result.length() > Operand.MAX_LENGTH) {
             switchToErrorState();
         } else {
             mCurrentOperand.setValue(result);
         }
-
 
         // Reset the previous operand and operator
         mPreviousOperand.reset();

@@ -18,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -190,6 +191,7 @@ public class CalculatorPresenterTest {
     public void divisionByZero_shouldActivateErrorState() {
         performZeroDivision();
 
+        verify(mCurrentOperand, times(1)).setValue(anyString());
         verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
     }
 
@@ -314,6 +316,7 @@ public class CalculatorPresenterTest {
         mPresenter.appendOperator(Operator.DIVIDE.toString());
         mPresenter.appendValue(Operand.EMPTY_VALUE);
         when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
+        verify(mCurrentOperand, never()).setValue(anyString());
     }
 
     private void performZeroDivision() {
