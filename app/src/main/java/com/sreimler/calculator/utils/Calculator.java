@@ -23,27 +23,78 @@ import com.sreimler.calculator.models.Operand;
  */
 public class Calculator {
 
+    /**
+     * Adds two operands.
+     *
+     * @param firstOperand  The first summand
+     * @param secondOperand The second summand
+     * @return The result of the addition
+     */
     public String add(Operand firstOperand, Operand secondOperand) {
-        int result = getIntValue(firstOperand) + getIntValue(secondOperand);
-        return Integer.toString(result);
+        double result = getValue(firstOperand) + getValue(secondOperand);
+        return formatResult(result);
     }
 
+    /**
+     * Subtracts two operands.
+     *
+     * @param firstOperand  The minuend
+     * @param secondOperand The subtrahend
+     * @return The result of the subtraction
+     */
     public String subtract(Operand firstOperand, Operand secondOperand) {
-        int result = getIntValue(firstOperand) - getIntValue(secondOperand);
-        return Integer.toString(result);
+        double result = getValue(firstOperand) - getValue(secondOperand);
+        return formatResult(result);
     }
 
+    /**
+     * Multiplies two operands.
+     *
+     * @param firstOperand  The multiplicant
+     * @param secondOperand The multiplier
+     * @return The result of the multiplication
+     */
     public String multiply(Operand firstOperand, Operand secondOperand) {
-        int result = getIntValue(firstOperand) * getIntValue(secondOperand);
-        return Integer.toString(result);
+        double result = getValue(firstOperand) * getValue(secondOperand);
+        return formatResult(result);
     }
 
+    /**
+     * Divides one operator by another
+     *
+     * @param firstOperand  The dividend
+     * @param secondOperand The divisor
+     * @return The result of the devision
+     */
     public String divide(Operand firstOperand, Operand secondOperand) {
-        int result = getIntValue(firstOperand) / getIntValue(secondOperand);
-        return Integer.toString(result);
+        double result = getValue(firstOperand) / getValue(secondOperand);
+        return formatResult(result);
     }
 
-    private int getIntValue(Operand operand) {
-        return Integer.valueOf(operand.getValue());
+    private double getValue(Operand operand) {
+        return Double.valueOf(operand.getValue());
+    }
+
+    private String formatResult(Double res) {
+        // Limit digits
+        double digits = Math.pow(10, Operand.MAX_DECIMAL_DIGITS);
+        res = Math.round(res * digits) / digits;
+
+        // Split resulting float
+        String result = Double.toString(res);
+        String decimals = result.substring(0, result.indexOf("."));
+        String fractionals = result.substring(result.indexOf(".") + 1);
+
+        // Remove trailing zeros
+        while (fractionals.length() > 0 && fractionals.substring(fractionals.length() - 1).equals("0")) {
+            fractionals = fractionals.substring(0, fractionals.length() - 1);
+        }
+
+        if (fractionals.length() > 0) {
+            // Result has fractionals different than zero - return them!
+            return decimals + "." + fractionals;
+        } else {
+            return decimals;
+        }
     }
 }

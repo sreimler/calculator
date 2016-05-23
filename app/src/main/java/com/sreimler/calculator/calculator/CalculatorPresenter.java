@@ -56,16 +56,6 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     }
 
     @Override
-    public String getPreviousOperand() {
-        return mPreviousOperand.getValue();
-    }
-
-    @Override
-    public String getCurrentOperand() {
-        return mCurrentOperand.getValue();
-    }
-
-    @Override
     public Operator getOperator() {
         return mOperator;
     }
@@ -81,11 +71,14 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
             resetCalculator();
         }
 
-        mCurrentOperand.appendValue(value);
-        hasLastInputOperator = false;
-        hasLastInputEquals = false;
-        isInErrorState = false;
-        updateDisplay();
+        // Value should only be appended if the operand size is below the maximum operand size
+        if (mCurrentOperand.getValue().length() < Operand.MAX_LENGTH) {
+            mCurrentOperand.appendValue(value);
+            hasLastInputOperator = false;
+            hasLastInputEquals = false;
+            isInErrorState = false;
+            updateDisplay();
+        }
     }
 
     @Override
@@ -110,25 +103,34 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void performCalculation() {
+        String result = "";
+
         switch (mOperator) {
             case PLUS:
-                mCurrentOperand.setValue(mCalculator.add(mPreviousOperand, mCurrentOperand));
+                result = mCalculator.add(mPreviousOperand, mCurrentOperand);
                 break;
             case MINUS:
-                mCurrentOperand.setValue(mCalculator.subtract(mPreviousOperand, mCurrentOperand));
+                result = mCalculator.subtract(mPreviousOperand, mCurrentOperand);
                 break;
             case MULTIPLY:
-                mCurrentOperand.setValue(mCalculator.multiply(mPreviousOperand, mCurrentOperand));
+                result = mCalculator.multiply(mPreviousOperand, mCurrentOperand);
                 break;
             case DIVIDE:
                 if (mCurrentOperand.getValue().equals(Operand.EMPTY_VALUE)) {
                     // Fordbidden division by zero - ERROR
                     switchToErrorState();
                 } else {
-                    mCurrentOperand.setValue(mCalculator.divide(mPreviousOperand, mCurrentOperand));
+                    result = mCalculator.divide(mPreviousOperand, mCurrentOperand);
                 }
                 break;
         }
+
+        if (result.length() > Operand.MAX_LENGTH) {
+            switchToErrorState();
+        } else {
+            mCurrentOperand.setValue(result);
+        }
+
 
         // Reset the previous operand and operator
         mPreviousOperand.reset();

@@ -22,7 +22,9 @@ package com.sreimler.calculator.models;
 public class Operand {
 
     public static final String EMPTY_VALUE = "0";
-    public static final String ERROR_VALUE = "Error";
+    public static final String ERROR_VALUE = "ERROR";
+    public static final int MAX_LENGTH = 10;
+    public static final int MAX_DECIMAL_DIGITS = 1;
 
     private String mValue = EMPTY_VALUE;
 

@@ -44,8 +44,8 @@ public class CalculatorTest {
     @Mock
     private Operand mSecondOperand;
 
-    private static final int VALUE_A = 53;
-    private static final int VALUE_B = 4;
+    private static final int VALUE_A = 2;
+    private static final int VALUE_B = 3;
 
     @Before
     public void setUp() {
@@ -70,7 +70,7 @@ public class CalculatorTest {
     public void testSubtraction() {
         String expectedResult = Integer.toString(VALUE_A - VALUE_B);
 
-        assertThat("Addition was executed correctly",
+        assertThat("Subtraction was executed correctly",
                 mCalculator.subtract(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 
@@ -78,15 +78,19 @@ public class CalculatorTest {
     public void testMultiplication() {
         String expectedResult = Integer.toString(VALUE_A * VALUE_B);
 
-        assertThat("Addition was executed correctly",
+        assertThat("Multiplication was executed correctly",
                 mCalculator.multiply(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 
     @Test
     public void testDivision() {
-        String expectedResult = Integer.toString(VALUE_A / VALUE_B);
+        // Limit decimal digits as specified in the operand
+        double digits = Math.pow(10, Operand.MAX_DECIMAL_DIGITS);
+        double result = Math.round(((double) VALUE_A / (double) VALUE_B) * digits) / digits;
 
-        assertThat("Addition was executed correctly",
+        String expectedResult = Double.toString(result);
+
+        assertThat("Division was executed correctly",
                 mCalculator.divide(mFirstOperand, mSecondOperand), is(equalTo(expectedResult)));
     }
 }

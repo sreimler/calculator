@@ -34,10 +34,6 @@ public class CalculatorContract {
 
         void clearCalculation();
 
-        String getPreviousOperand();
-
-        String getCurrentOperand();
-
         Operator getOperator();
 
         void appendValue(String value);

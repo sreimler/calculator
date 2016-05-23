@@ -32,7 +32,7 @@
     </style>
 
     <style name="AppTheme.TextView">
-        <item name="android:textSize">85sp</item>
+        <item name="android:textSize">60sp</item>
         <item name="android:textColor">#de000000</item>
     </style>
 

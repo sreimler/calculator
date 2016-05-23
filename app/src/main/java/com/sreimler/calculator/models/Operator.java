@@ -38,17 +38,23 @@ public enum Operator {
     }
 
     public static Operator getOperator(String operator) {
+        Operator op = Operator.EMPTY;
+
         switch (operator) {
             case "+":
-                return PLUS;
+                op = PLUS;
+                break;
             case "-":
-                return MINUS;
+                op = MINUS;
+                break;
             case "*":
-                return MULTIPLY;
+                op = MULTIPLY;
+                break;
             case "/":
-                return DIVIDE;
-            default:
-                return EMPTY;
+                op = DIVIDE;
+                break;
         }
+
+        return op;
     }
 }

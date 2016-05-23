@@ -55,6 +55,11 @@ public class CalculatorPresenterTest {
         when(mCurrentOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
         when(mPreviousOperand.getValue()).thenReturn(Operand.EMPTY_VALUE);
 
+        when(mCalculator.add(any(Operand.class), any(Operand.class))).thenReturn("0");
+        when(mCalculator.subtract(any(Operand.class), any(Operand.class))).thenReturn("0");
+        when(mCalculator.multiply(any(Operand.class), any(Operand.class))).thenReturn("0");
+        when(mCalculator.divide(any(Operand.class), any(Operand.class))).thenReturn("0");
+
         mPresenter = new CalculatorPresenter(mCalculator, mView, mCurrentOperand, mPreviousOperand);
     }
 
@@ -228,6 +233,80 @@ public class CalculatorPresenterTest {
         verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
         assertThat("Operator has been reset",
                 mPresenter.getOperator(), is(equalTo(Operator.EMPTY)));
+    }
+
+    @Test
+    public void maxLengthOfInputs_shouldBeLimited() {
+        String value = "";
+        for (int i = 0; i < Operand.MAX_LENGTH + 1; i++) {
+            mPresenter.appendValue(SHORT_INPUT_B);
+            value += SHORT_INPUT_B;
+            when(mCurrentOperand.getValue()).thenReturn(value);
+        }
+
+        verify(mCurrentOperand, times(Operand.MAX_LENGTH)).appendValue(SHORT_INPUT_B);
+    }
+
+    @Test
+    public void shouldBeAbleToPerformAddition() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.appendOperator(Operator.PLUS.toString());
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.performCalculation();
+
+        verify(mCalculator).add(any(Operand.class), any(Operand.class));
+    }
+
+    @Test
+    public void shouldBeAbleToPerformSubtraction() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.appendOperator(Operator.MINUS.toString());
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.performCalculation();
+
+        verify(mCalculator).subtract(any(Operand.class), any(Operand.class));
+    }
+
+    @Test
+    public void shouldBeAbleToPerformMultiplication() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.appendOperator(Operator.MULTIPLY.toString());
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.performCalculation();
+
+        verify(mCalculator).multiply(any(Operand.class), any(Operand.class));
+    }
+
+    @Test
+    public void shouldBeAbleToPerformDivision() {
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.appendOperator(Operator.DIVIDE.toString());
+        mPresenter.appendValue(SHORT_INPUT_B);
+        // Mock of current operand must not return 0 to perform a division
+        when(mCurrentOperand.getValue()).thenReturn(SHORT_INPUT_B);
+        mPresenter.performCalculation();
+
+        verify(mCalculator).divide(any(Operand.class), any(Operand.class));
+    }
+
+    @Test
+    public void oversizeResult_shouldSwitchToErrorState() {
+        // Create oversize result string
+        String result = "";
+        for (int i = 0; i <= Operand.MAX_LENGTH; i++) {
+            result += SHORT_INPUT_A;
+        }
+
+        // Make the calculator return the desired result
+        when(mCalculator.add(any(Operand.class), any(Operand.class))).thenReturn(result);
+
+        // Perform calculation to trigger mCalculator.add()
+        mPresenter.appendValue(SHORT_INPUT_B);
+        mPresenter.appendOperator(Operator.PLUS.toString());
+        mPresenter.appendValue(SHORT_INPUT_A);
+        mPresenter.performCalculation();
+
+        verify(mCurrentOperand, atLeastOnce()).setValue(Operand.ERROR_VALUE);
     }
 
     private void prepareZeroDivision() {
