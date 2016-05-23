@@ -7,3 +7,5 @@ The model and view components contain pure Java code and are therefore tested wi
 The view does only take the user input and forward it to the presenter. [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/) tests validate correct functionality of the user interface.
 
 The current state of the app can be seen in the [Google Play Store].
+
+<img src="https://github.com/sreimler/calculator/blob/master/images/screenshot3.png" width="256">
