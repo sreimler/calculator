@@ -16,10 +16,10 @@
 
 package com.sreimler.calculator.calculator;
 
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.AppCompatButton;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.sreimler.calculator.R;
 
@@ -27,13 +27,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -43,12 +43,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @RunWith(AndroidJUnit4.class)
 public class CalculatorActivityTest {
 
-    private static char[] OPERATORS = {'+', '-', '*', '/'};
-    private static String RANDOM_INPUT = "533";
+    private static final char[] OPERATORS = {'+', '-', '*', '/'};
+    private static final String RANDOM_INPUT = "533";
 
     @Rule
-    public ActivityTestRule<CalculatorActivity> mActivityRule =
-            new ActivityTestRule<>(CalculatorActivity.class);
+    public ActivityScenarioRule<CalculatorActivity> mActivityRule =
+            new ActivityScenarioRule<>(CalculatorActivity.class);
 
     @Test
     public void calculatorButtons_shouldBeVisible() {
@@ -76,7 +76,6 @@ public class CalculatorActivityTest {
     @Test
     public void clicksOnNumberButtons_shouldUpdateCalculatorDisplay() {
         clickSomeNumbers();
-
         onView(withId(R.id.txtv_display_calculation)).check(matches(withText(RANDOM_INPUT)));
     }
 
@@ -85,7 +84,6 @@ public class CalculatorActivityTest {
         for (char OPERATOR : OPERATORS) {
             String operator = String.valueOf(OPERATOR);
             clickButtonWithText(operator);
-
             onView(withId(R.id.txtv_display_operator)).check(matches(withText(operator)));
         }
     }
@@ -94,10 +92,8 @@ public class CalculatorActivityTest {
     public void clickOnClearButton_shouldClearDisplays() {
         clickSomeNumbers();
         clickButtonWithText("+");
-
         // Clear input
         clickButtonWithText("AC");
-
         // Operator display should be empty, calculator display should be zero
         onView(withId(R.id.txtv_display_operator)).check(matches(withText("")));
         onView(withId(R.id.txtv_display_calculation)).check(matches(withText("0")));
@@ -110,7 +106,6 @@ public class CalculatorActivityTest {
         clickSomeNumbers();
         clickButtonWithText("=");
         String result = String.valueOf(Integer.valueOf(RANDOM_INPUT) + Integer.valueOf(RANDOM_INPUT));
-
         onView(withId(R.id.txtv_display_calculation)).check(matches(withText(result)));
     }
 
