@@ -8,4 +8,4 @@ The view does only take the user input and forward it to the presenter. [Espress
 
 The full app can be downloaded from the [Google Play Store](https://play.google.com/store/apps/details?id=com.sreimler.calculator).
 
-<img src="https://github.com/sreimler/calculator/blob/master/images/screenshot3.png" width="256">
+<img src="https://raw.githubusercontent.com/sreimler/calculator/master/images/screenshot3.png" width="256" alt="Screenshot">
