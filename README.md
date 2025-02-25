@@ -1,4 +1,4 @@
-#TDD MVP Calculator
+# TDD MVP Calculator
 
 This repository shows the [test-driven development](https://en.wikipedia.org/wiki/Test-driven_development) of a simple calculator. The presentation layer was structured following a [model-view-presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) approach in order to improve the testability of the app components.
 
